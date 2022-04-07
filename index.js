@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const todos = require("./api/todos");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 app.use(express.json({ extended: false }));
 
 app.use("/api/todos", todos);
