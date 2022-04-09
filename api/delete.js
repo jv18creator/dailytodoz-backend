@@ -15,20 +15,14 @@ async function main() {
   } catch (error) {}
 }
 
-const updateSelectedTodo = async (res, update) => {
+const deleteSelectedTodo = async (update, res) => {
+  console.log("update DELETE", update);
   try {
     const result = await client
       .db("sample_todo")
       .collection("todos")
-      .updateOne(
-        { _id: ObjectId(update._id) },
-        {
-          $set: {
-            description: update.description,
-          },
-        }
-      );
-
+      .deleteOne({ _id: ObjectId(update._id) });
+    console.log("result are noe", result);
     if (result) {
       res.json({
         success: true,
@@ -38,12 +32,18 @@ const updateSelectedTodo = async (res, update) => {
         success: false,
       });
     }
-  } catch (error) {}
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error,
+    });
+  }
 };
 
-router.post("/", async (req, res) => {
+router.delete("/", async (req, res) => {
+  console.log("DELETE req.body", req.body);
   try {
-    updateSelectedTodo(res, req.body);
+    deleteSelectedTodo(req.body, res);
   } catch (error) {
     return res.status(500).send("Server Error");
   }
